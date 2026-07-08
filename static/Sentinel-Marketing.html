@@ -222,6 +222,9 @@ footer .muted{color:var(--grey-dim);font-size:.82rem;}
 @media(min-width:901px) and (max-width:1150px){
   .feat-grid{grid-template-columns:repeat(2,1fr);}
 }
+.frame3d img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 30px rgba(0,158,253,.18));animation:floaty 7s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.prob-media img{width:100%;height:100%;object-fit:cover;opacity:.9;}
 </style>
 </head>
 <body>
@@ -285,7 +288,7 @@ footer .muted{color:var(--grey-dim);font-size:.82rem;}
         </div>
       </div>
       <div class="prob-media reveal d2">
-        <video src="Videos/theft-cctv.mp4" autoplay muted loop playsinline></video>
+        <img src="Images/theft-cargo.jpg" alt="Cargo theft caught on camera at night">
         <div class="tag"><i></i>CCTV · THEFT</div>
         <div class="ts">02:14 AM</div>
       </div>
@@ -321,8 +324,7 @@ footer .muted{color:var(--grey-dim);font-size:.82rem;}
   <div class="wrap">
     <div class="frame3d reveal">
       <div class="ring"></div>
-      <div class="load" id="d3load">Loading 3D model…</div>
-      <iframe id="d3" data-src="3D/sentinel-only.html" scrolling="no" title="Sentinel 3D model" loading="lazy"></iframe>
+      <img src="Images/sentinel-3d.jpg" alt="Sentinel — cutaway view of the integrated hardware">
     </div>
     <div>
       <div class="eyebrow reveal">One device. Everything on board.</div>
@@ -585,12 +587,6 @@ document.querySelectorAll('.nv-tab').forEach(tab=>{
   });
 });
 
-/* lazy-load the heavy 3D model only when scrolled near */
-const d3=document.getElementById('d3'), d3load=document.getElementById('d3load');
-const d3Obs=new IntersectionObserver((es)=>{
-  es.forEach(e=>{ if(e.isIntersecting && !d3.src){ d3.src=d3.dataset.src; d3.addEventListener('load',()=>{ if(d3load) d3load.style.opacity='0'; }); d3Obs.disconnect(); } });
-},{rootMargin:'200px'});
-d3Obs.observe(document.querySelector('.frame3d'));
 
 /* demo form (front-end only) */
 document.getElementById('demoForm').addEventListener('submit',(e)=>{
