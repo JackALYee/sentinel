@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentinel — The 24/7 Camera That Never Sleeps | Streamax</title>
+<meta name="description" content="Sentinel is the industry's first Always-on Video camera — forensic clarity at the power budget of a sensor. Guard parked trucks 24/7, up to 90 days, engine off.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050810;--bg-2:#080d17;--panel:rgba(255,255,255,.03);--line:rgba(255,255,255,.09);
+  --green:#2AF598;--blue:#009EFD;--amber:#FFC53D;--red:#FF3B30;
+  --white:#fff;--grey:#96A3B4;--grey-dim:rgba(150,163,180,.6);
+  --font:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --epic:cubic-bezier(.22,1,.36,1);--apple:cubic-bezier(.16,1,.3,1);
+  --maxw:1200px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:var(--font);overflow-x:hidden;line-height:1.5;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+img{max-width:100%;display:block;}
+section{scroll-margin-top:76px;}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 6vw;}
+.grad{background:linear-gradient(120deg,var(--green),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.eyebrow{font-size:.78rem;letter-spacing:.32em;text-transform:uppercase;font-weight:700;color:var(--green);margin-bottom:1.1rem;}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .9s var(--apple),transform 1s var(--apple);}
+.reveal.in{opacity:1;transform:none;}
+.reveal.d1{transition-delay:.08s;}.reveal.d2{transition-delay:.16s;}.reveal.d3{transition-delay:.24s;}.reveal.d4{transition-delay:.32s;}.reveal.d5{transition-delay:.4s;}
+
+/* scroll progress */
+#prog{position:fixed;top:0;left:0;height:2px;width:0;z-index:120;background:linear-gradient(90deg,var(--green),var(--blue));box-shadow:0 0 10px rgba(42,245,152,.5);transition:width .1s linear;}
+
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:66px;display:flex;align-items:center;
+  background:rgba(5,8,16,.55);backdrop-filter:blur(16px);border-bottom:1px solid transparent;transition:background .3s,border-color .3s;}
+nav.solid{background:rgba(5,8,16,.85);border-color:var(--line);}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;width:100%;}
+.logo{display:flex;align-items:center;gap:.6rem;font-weight:900;letter-spacing:.5px;font-size:1.15rem;}
+.logo .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--blue));box-shadow:0 0 12px rgba(42,245,152,.6);}
+.logo small{font-weight:700;font-size:.62rem;letter-spacing:.28em;color:var(--grey);text-transform:uppercase;margin-left:.2rem;}
+.navlinks{display:flex;gap:2rem;align-items:center;}
+.navlinks a{font-size:.9rem;font-weight:600;color:var(--grey);transition:color .2s;position:relative;padding:.3rem 0;}
+.navlinks a:hover,.navlinks a.active{color:var(--white);}
+.navlinks a.active::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--blue));}
+.btn{display:inline-flex;align-items:center;gap:.5rem;font-weight:700;font-size:.92rem;border-radius:100px;padding:.8rem 1.5rem;cursor:pointer;border:1px solid transparent;transition:transform .2s var(--apple),box-shadow .3s,background .3s;white-space:nowrap;}
+.btn-primary{background:linear-gradient(120deg,var(--green),var(--blue));color:#04140c;box-shadow:0 8px 26px rgba(0,158,253,.28);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 34px rgba(0,158,253,.42);}
+.btn-ghost{background:rgba(255,255,255,.04);border-color:var(--line);color:var(--white);}
+.btn-ghost:hover{background:rgba(255,255,255,.09);transform:translateY(-2px);}
+.nav-cta{padding:.62rem 1.2rem;}
+
+/* hero */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;padding-top:66px;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;z-index:0;background:url('Images/hero-truck.jpg') center/cover no-repeat;opacity:.28;}
+.hero-bg::after{content:'';position:absolute;inset:0;background:
+  radial-gradient(120% 90% at 78% 30%,rgba(0,158,253,.16),transparent 55%),
+  linear-gradient(180deg,rgba(5,8,16,.55) 0%,rgba(5,8,16,.82) 55%,var(--bg) 100%),
+  linear-gradient(90deg,var(--bg) 8%,transparent 60%);}
+.hero-grid{position:absolute;inset:0;z-index:0;opacity:.5;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:46px 46px;mask-image:radial-gradient(70% 60% at 50% 40%,#000,transparent 90%);}
+.hero .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:3rem;align-items:center;}
+.hero-copy{max-width:640px;}
+.badge{display:inline-flex;align-items:center;gap:.55rem;font-size:.72rem;letter-spacing:.2em;font-weight:700;text-transform:uppercase;color:var(--grey);
+  border:1px solid var(--line);border-radius:100px;padding:.45rem 1rem;background:rgba(255,255,255,.02);margin-bottom:1.8rem;}
+.badge i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 2s ease infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+h1{font-size:clamp(2.6rem,6vw,4.7rem);font-weight:900;line-height:1.02;letter-spacing:-.03em;}
+.hero p.lead{font-size:clamp(1.05rem,1.6vw,1.28rem);color:var(--grey);margin-top:1.6rem;max-width:560px;}
+.hero p.lead b{color:#fff;font-weight:600;}
+.hero-cta{display:flex;gap:1rem;margin-top:2.4rem;flex-wrap:wrap;}
+.hero-stats{display:flex;gap:2.4rem;margin-top:3rem;flex-wrap:wrap;}
+.hstat .n{font-size:2rem;font-weight:900;letter-spacing:-.02em;}
+.hstat .l{font-size:.82rem;color:var(--grey);margin-top:.15rem;}
+.hero-product{position:relative;display:flex;justify-content:center;align-items:center;}
+.hero-product .halo{position:absolute;width:115%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(0,158,253,.22),rgba(42,245,152,.06) 45%,transparent 70%);filter:blur(6px);animation:breathe 6s ease-in-out infinite;}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.08);opacity:1}}
+.hero-product img{position:relative;width:88%;filter:drop-shadow(0 30px 60px rgba(0,0,0,.6)) drop-shadow(0 0 40px rgba(0,158,253,.15));animation:float 7s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.scrollcue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:3;color:var(--grey-dim);font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.scrollcue .m{width:22px;height:34px;border:1px solid var(--line);border-radius:12px;position:relative;}
+.scrollcue .m::after{content:'';position:absolute;top:6px;left:50%;transform:translateX(-50%);width:4px;height:7px;border-radius:3px;background:var(--green);animation:mouse 1.6s ease infinite;}
+@keyframes mouse{0%{opacity:0;transform:translate(-50%,0)}40%{opacity:1}100%{opacity:0;transform:translate(-50%,10px)}}
+
+/* generic section */
+.sec{padding:clamp(5rem,10vw,9rem) 0;position:relative;}
+.sec-head{max-width:760px;margin-bottom:3.4rem;}
+.sec-head.center{margin-left:auto;margin-right:auto;text-align:center;}
+h2{font-size:clamp(2rem,4.2vw,3.2rem);font-weight:900;letter-spacing:-.025em;line-height:1.08;}
+.sec-head p{color:var(--grey);font-size:clamp(1rem,1.4vw,1.15rem);margin-top:1.2rem;}
+
+/* problem */
+.problem{background:linear-gradient(180deg,var(--bg),#0a0e18 50%,var(--bg));}
+.prob-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:3.4rem;align-items:center;}
+.prob-media{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 70px rgba(0,0,0,.5);aspect-ratio:16/10;background:#000;}
+.prob-media video{width:100%;height:100%;object-fit:cover;opacity:.9;}
+.prob-media .tag{position:absolute;top:14px;left:14px;font-size:.7rem;letter-spacing:.15em;font-weight:800;text-transform:uppercase;color:#fff;background:rgba(255,59,48,.85);padding:.4rem .8rem;border-radius:6px;display:flex;align-items:center;gap:.4rem;}
+.prob-media .tag i{width:7px;height:7px;border-radius:50%;background:#fff;animation:blink 1.4s infinite;}
+.prob-media .ts{position:absolute;bottom:14px;right:14px;font-family:ui-monospace,monospace;font-size:.8rem;color:rgba(255,255,255,.8);background:rgba(0,0,0,.5);padding:.25rem .6rem;border-radius:5px;}
+.bigstat{font-size:clamp(3.4rem,8vw,5.6rem);font-weight:900;letter-spacing:-.03em;line-height:1;}
+.statcards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2.6rem;}
+.statcard{border:1px solid var(--line);border-radius:14px;padding:1.4rem;background:var(--panel);}
+.statcard .k{font-size:1.6rem;font-weight:900;}
+.statcard .v{font-size:.85rem;color:var(--grey);margin-top:.4rem;}
+
+/* answer */
+.answer{background:radial-gradient(90% 60% at 50% 0%,rgba(0,158,253,.07),transparent 60%);}
+.pillars{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;margin-top:1rem;}
+.pillar{border:1px solid var(--line);border-radius:18px;padding:2.2rem;background:var(--panel);position:relative;overflow:hidden;transition:transform .3s var(--apple),border-color .3s;}
+.pillar:hover{transform:translateY(-4px);border-color:rgba(42,245,152,.4);}
+.pillar .ic{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(42,245,152,.1);border:1px solid rgba(42,245,152,.3);margin-bottom:1.2rem;}
+.pillar .ic svg{width:24px;height:24px;stroke:var(--green);fill:none;stroke-width:1.8;}
+.pillar h3{font-size:1.4rem;font-weight:800;}
+.pillar p{color:var(--grey);margin-top:.7rem;font-size:.98rem;}
+.pillar b{color:var(--green);}
+
+/* 3D showcase */
+.showcase{position:relative;}
+.showcase .wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:2rem;align-items:center;}
+.frame3d{position:relative;aspect-ratio:1/1;width:100%;max-width:560px;margin:0 auto;}
+.frame3d iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:transparent;}
+.frame3d .ring{position:absolute;inset:8%;border:1px dashed rgba(255,255,255,.08);border-radius:50%;animation:spin 60s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.frame3d .load{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--grey-dim);font-size:.85rem;letter-spacing:.1em;}
+.specrow{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.6rem;}
+.chip{border:1px solid var(--line);border-radius:100px;padding:.5rem 1rem;font-size:.82rem;color:var(--grey);background:var(--panel);}
+.chip b{color:#fff;}
+
+/* features */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;}
+.fcard{border:1px solid var(--line);border-radius:18px;padding:2rem;background:var(--panel);transition:transform .3s var(--apple),border-color .3s,background .3s;position:relative;overflow:hidden;}
+.fcard::before{content:'';position:absolute;inset:0;background:radial-gradient(120% 80% at 0% 0%,rgba(42,245,152,.08),transparent 55%);opacity:0;transition:opacity .35s;}
+.fcard:hover{transform:translateY(-6px);border-color:rgba(0,158,253,.4);}
+.fcard:hover::before{opacity:1;}
+.fcard .ic{width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(42,245,152,.14),rgba(0,158,253,.1));border:1px solid var(--line);margin-bottom:1.3rem;position:relative;}
+.fcard .ic svg{width:26px;height:26px;stroke:var(--green);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.fcard h3{font-size:1.28rem;font-weight:800;position:relative;}
+.fcard p{color:var(--grey);margin-top:.7rem;font-size:.95rem;position:relative;}
+.fcard .metric{margin-top:1.2rem;font-size:.82rem;font-weight:700;color:var(--blue);letter-spacing:.02em;position:relative;}
+
+/* night vision */
+.night{background:linear-gradient(180deg,var(--bg),#05070e);}
+.nv{display:grid;grid-template-columns:1fr;gap:2rem;}
+.nv-stage{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--line);aspect-ratio:16/8;background:#000;box-shadow:0 30px 80px rgba(0,0,0,.6);}
+.nv-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s ease;}
+.nv-stage img.show{opacity:1;}
+.nv-stage .lux{position:absolute;top:16px;left:16px;font-family:ui-monospace,monospace;font-size:.78rem;letter-spacing:.1em;color:rgba(255,255,255,.75);background:rgba(0,0,0,.45);padding:.35rem .7rem;border-radius:6px;border:1px solid rgba(255,255,255,.12);}
+.nv-caption{position:absolute;bottom:18px;left:18px;right:18px;}
+.nv-caption .who{font-size:1.15rem;font-weight:800;}
+.nv-caption .what{font-size:.9rem;color:var(--grey);margin-top:.2rem;}
+.nv-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.nv-tab{border:1px solid var(--line);border-radius:14px;padding:1.2rem 1.3rem;background:var(--panel);cursor:pointer;transition:border-color .25s,background .25s,transform .2s;text-align:left;color:var(--white);font-family:inherit;}
+.nv-tab:hover{transform:translateY(-3px);}
+.nv-tab.active{border-color:var(--green);background:rgba(42,245,152,.06);}
+.nv-tab .t{font-size:1rem;font-weight:800;display:flex;align-items:center;gap:.5rem;}
+.nv-tab .t .d{width:9px;height:9px;border-radius:50%;background:var(--grey);}
+.nv-tab.active .t .d{background:var(--green);box-shadow:0 0 10px var(--green);}
+.nv-tab .s{font-size:.85rem;color:var(--grey);margin-top:.4rem;}
+
+/* specs */
+.spec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+.spec{border:1px solid var(--line);border-radius:16px;padding:1.8rem;background:var(--panel);transition:border-color .3s,transform .3s;}
+.spec:hover{border-color:rgba(0,158,253,.35);transform:translateY(-3px);}
+.spec .k{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green);font-weight:700;}
+.spec .v{font-size:1.7rem;font-weight:900;margin-top:.6rem;letter-spacing:-.02em;}
+.spec .d{font-size:.88rem;color:var(--grey);margin-top:.4rem;}
+
+/* cta / contact */
+.cta{position:relative;overflow:hidden;background:radial-gradient(80% 120% at 50% 0%,rgba(0,158,253,.14),transparent 60%);}
+.cta-box{border:1px solid var(--line);border-radius:26px;padding:clamp(2.4rem,5vw,4rem);background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.01));position:relative;overflow:hidden;}
+.cta-box::before{content:'';position:absolute;top:-40%;right:-10%;width:50%;height:180%;background:radial-gradient(circle,rgba(42,245,152,.12),transparent 65%);}
+.cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;position:relative;}
+.cta-grid h2{font-size:clamp(2rem,3.6vw,2.8rem);}
+.cta-grid p{color:var(--grey);margin-top:1rem;}
+form{display:grid;gap:.9rem;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+input,select{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:11px;padding:.9rem 1rem;color:#fff;font-family:inherit;font-size:.95rem;transition:border-color .2s,background .2s;}
+input::placeholder{color:var(--grey-dim);}
+input:focus,select:focus{outline:none;border-color:var(--green);background:rgba(42,245,152,.05);}
+select{appearance:none;cursor:pointer;color:var(--grey);}
+form .btn-primary{justify-content:center;padding:1rem;font-size:1rem;}
+.formnote{font-size:.78rem;color:var(--grey-dim);text-align:center;}
+.thanks{display:none;text-align:center;padding:2rem;border:1px solid rgba(42,245,152,.4);border-radius:16px;background:rgba(42,245,152,.06);}
+.thanks.show{display:block;}
+.thanks .big{font-size:1.4rem;font-weight:800;}
+.thanks svg{width:44px;height:44px;stroke:var(--green);fill:none;stroke-width:2;margin-bottom:.8rem;}
+
+/* downloads */
+.downloads{background:linear-gradient(180deg,var(--bg),#070b14);}
+.dl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;}
+.dl-card{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:18px;padding:1.9rem;background:var(--panel);transition:transform .3s var(--apple),border-color .3s,background .3s;}
+.dl-card:hover{transform:translateY(-5px);border-color:rgba(0,158,253,.4);background:rgba(255,255,255,.045);}
+.dl-card .ic{width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(42,245,152,.14),rgba(0,158,253,.1));border:1px solid var(--line);margin-bottom:1.3rem;}
+.dl-card .ic svg{width:26px;height:26px;stroke:var(--green);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.dl-card h3{font-size:1.22rem;font-weight:800;}
+.dl-card p{color:var(--grey);margin-top:.5rem;font-size:.92rem;flex:1;}
+.dl-meta{display:flex;align-items:center;gap:.6rem;margin-top:1.2rem;font-size:.75rem;letter-spacing:.06em;color:var(--grey-dim);text-transform:uppercase;font-weight:700;}
+.dl-meta .pill{border:1px solid var(--line);border-radius:6px;padding:.2rem .55rem;}
+.dl-btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;margin-top:1.4rem;font-weight:700;font-size:.92rem;border-radius:100px;padding:.8rem 1.3rem;
+  background:rgba(255,255,255,.04);border:1px solid var(--line);color:#fff;transition:background .25s,border-color .25s,transform .2s;}
+.dl-btn:hover{background:linear-gradient(120deg,var(--green),var(--blue));color:#04140c;border-color:transparent;transform:translateY(-2px);}
+.dl-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:2.6rem 0;}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+footer .muted{color:var(--grey-dim);font-size:.82rem;}
+.trustbar{display:flex;gap:2rem;flex-wrap:wrap;align-items:center;justify-content:center;opacity:.75;margin-top:2.5rem;}
+.trustbar span{font-size:.8rem;color:var(--grey);letter-spacing:.05em;display:flex;align-items:center;gap:.5rem;}
+.trustbar svg{width:16px;height:16px;stroke:var(--green);fill:none;stroke-width:2;}
+
+@media(max-width:900px){
+  .navlinks{display:none;}
+  .hero .wrap{grid-template-columns:1fr;gap:1.5rem;}
+  .hero-product{order:-1;max-width:340px;margin:0 auto;}
+  .prob-grid,.showcase .wrap,.cta-grid{grid-template-columns:1fr;gap:2rem;}
+  .pillars,.feat-grid,.spec-grid,.nv-tabs,.statcards,.dl-grid{grid-template-columns:1fr;}
+  .feat-grid{grid-template-columns:1fr;}
+  .frow{grid-template-columns:1fr;}
+}
+@media(min-width:901px) and (max-width:1150px){
+  .feat-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+
+<nav id="nav">
+  <div class="wrap">
+    <a href="#hero" class="logo"><span class="dot"></span>SENTINEL<small>by Streamax</small></a>
+    <div class="navlinks">
+      <a href="#problem">The Problem</a>
+      <a href="#answer">The Answer</a>
+      <a href="#features">Features</a>
+      <a href="#night">Night Vision</a>
+      <a href="#specs">Specs</a>
+      <a href="#downloads">Docs</a>
+    </div>
+    <a href="#contact" class="btn btn-primary nav-cta">Request a demo</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="wrap">
+    <div class="hero-copy">
+      <div class="badge"><i></i> Always recording · engine on or off</div>
+      <h1>The camera that <span class="grad">never sleeps.</span></h1>
+      <p class="lead">Sentinel is the industry's first <b>Always-on Video camera</b> — purpose-built to guard parked trucks. The forensic clarity of a camera at the power budget of a sensor. Engine off, still watching, <b>for up to 90 days.</b></p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-primary">Request a demo →</a>
+        <a href="#night" class="btn btn-ghost">See it in the dark</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="n grad"><span class="count" data-to="200" data-suffix=" mW">0</span></div><div class="l">Typical AOV power draw</div></div>
+        <div class="hstat"><div class="n grad"><span class="count" data-to="90" data-suffix="-day">0</span></div><div class="l">Standby on the truck's battery</div></div>
+        <div class="hstat"><div class="n grad"><span class="count" data-to="2.5" data-dec="1" data-suffix=" lux">0</span></div><div class="l">Full-color night vision</div></div>
+      </div>
+    </div>
+    <div class="hero-product">
+      <div class="halo"></div>
+      <img src="Images/sentinel-side.png" alt="Sentinel 24/7 AOV camera">
+    </div>
+  </div>
+  <div class="scrollcue"><div class="m"></div>Scroll</div>
+</header>
+
+<!-- PROBLEM -->
+<section class="sec problem" id="problem">
+  <div class="wrap">
+    <div class="prob-grid">
+      <div>
+        <div class="eyebrow reveal">The problem</div>
+        <div class="bigstat reveal d1"><span class="grad">$<span class="count" data-to="35" data-suffix="B">0</span></span></div>
+        <h2 class="reveal d1" style="margin-top:.4rem;">lost to fuel &amp; cargo theft every year.</h2>
+        <p class="reveal d2" style="color:var(--grey);font-size:1.1rem;margin-top:1.2rem;max-width:520px;">It happens where you can't see it — in dark yards, overnight, with the engine off and the dashcam asleep. By the time anyone notices, the fuel is gone and the footage is useless.</p>
+        <div class="statcards reveal d3">
+          <div class="statcard"><div class="k grad">Overnight</div><div class="v">When most theft happens — parked, unattended, dark.</div></div>
+          <div class="statcard"><div class="k grad">Engine off</div><div class="v">Traditional cameras power down and stop recording.</div></div>
+          <div class="statcard"><div class="k grad">No evidence</div><div class="v">Grainy or black footage that won't hold up in court.</div></div>
+        </div>
+      </div>
+      <div class="prob-media reveal d2">
+        <video src="Videos/theft-cctv.mp4" autoplay muted loop playsinline></video>
+        <div class="tag"><i></i>CCTV · THEFT</div>
+        <div class="ts">02:14 AM</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANSWER -->
+<section class="sec answer" id="answer">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow reveal">The answer</div>
+      <h2 class="reveal d1">You shouldn't have to choose between <span class="grad">battery life</span> and <span class="grad">evidence.</span></h2>
+      <p class="reveal d2">Most cameras force a trade-off. We went back to the hardware and engineered a camera specifically for parked assets — the industry's first Always-on Video camera. No trade-off. No blind spot.</p>
+    </div>
+    <div class="pillars">
+      <div class="pillar reveal d1">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></div>
+        <h3>The power of a sensor</h3>
+        <p>Just <b>~200 mW</b> — about <b>1/30 the draw</b> of a traditional camera. Sentinel runs up to <b>90 days</b> on the truck's own battery, engine off, no idling required.</p>
+      </div>
+      <div class="pillar reveal d2">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <h3>The clarity of a camera</h3>
+        <p>Full-color, court-ready footage — even at <b>2.5 lux</b>. Faces, clothing, plates and actions captured in detail, exactly when it matters most.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3D SHOWCASE -->
+<section class="sec showcase" id="hardware">
+  <div class="wrap">
+    <div class="frame3d reveal">
+      <div class="ring"></div>
+      <div class="load" id="d3load">Loading 3D model…</div>
+      <iframe id="d3" data-src="3D/sentinel-only.html" scrolling="no" title="Sentinel 3D model" loading="lazy"></iframe>
+    </div>
+    <div>
+      <div class="eyebrow reveal">One device. Everything on board.</div>
+      <h2 class="reveal d1">All-in-one by design.</h2>
+      <p class="reveal d2" style="color:var(--grey);font-size:1.1rem;margin-top:1.1rem;max-width:520px;">4G, GNSS, Wi-Fi &amp; Bluetooth, onboard storage, and I/O with RS-232 — integrated into one compact, magnetic unit. No separate recorder. No wiring maze. Nothing extra to buy.</p>
+      <div class="specrow reveal d3">
+        <div class="chip"><b>4G</b> connectivity</div>
+        <div class="chip"><b>GNSS</b> positioning</div>
+        <div class="chip"><b>Wi-Fi</b> + <b>Bluetooth</b></div>
+        <div class="chip"><b>Onboard</b> storage</div>
+        <div class="chip"><b>I/O</b> + RS-232</div>
+        <div class="chip"><b>Magnetic</b> mount</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="sec" id="features">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow reveal">What Sentinel does</div>
+      <h2 class="reveal d1">Six ways Sentinel <span class="grad">protects your fleet.</span></h2>
+    </div>
+    <div class="feat-grid">
+      <div class="fcard reveal d1">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+        <h3>Always-on Video</h3>
+        <p>24/7 recording, engine on or off. Your asset is never unwatched — day, night, parked or moving.</p>
+        <div class="metric">Up to 90-day standby · ~200 mW</div>
+      </div>
+      <div class="fcard reveal d2">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 1 3 3v1a4 4 0 0 1 2 3v2a5 5 0 0 1-10 0V9a4 4 0 0 1 2-3V5a3 3 0 0 1 3-3z"/><path d="M9 20h6M12 17v3"/></svg></div>
+        <h3>Intent-Aware AI</h3>
+        <p>Posture-level threat detection tells a passer-by from a thief — so you get an alert only when it's real, not every time a leaf moves.</p>
+        <div class="metric">Fewer false alerts · real threats only</div>
+      </div>
+      <div class="fcard reveal d3">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/><path d="M17 5l.7 1.6L19 7l-1.3.4L17 9l-.7-1.6L15 7l1.3-.4z"/></svg></div>
+        <h3>Black Light Ultra</h3>
+        <p>Full-color forensic footage in near-total darkness, where phones and standard cameras see only black.</p>
+        <div class="metric">Full color at 2.5 lux</div>
+      </div>
+      <div class="fcard reveal d1">
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5M12 13h5M12 16h3"/></svg></div>
+        <h3>All-in-One Design</h3>
+        <p>4G · GNSS · Wi-Fi/BT · storage · I/O &amp; RS-232 in one unit. No recorder, no add-ons, no clutter in the cab.</p>
+        <div class="metric">Everything integrated</div>
+      </div>
+      <div class="fcard reveal d2">
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></div>
+        <h3>IoT Synergies</h3>
+        <p>Fuel, tire pressure, temperature and door sensors flow into one alert stream — every alert with Sentinel video attached.</p>
+        <div class="metric">One stream · video on every event</div>
+      </div>
+      <div class="fcard reveal d3">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z"/></svg></div>
+        <h3>Minutes to Install</h3>
+        <p>A magnetic, tool-free mount snaps onto any steel surface. Any driver can deploy or reposition it — fleet-wide rollout, fast.</p>
+        <div class="metric">No drilling · minutes, not hours</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NIGHT VISION -->
+<section class="sec night" id="night">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow reveal">Black Light Ultra</div>
+      <h2 class="reveal d1">At 2.5 lux, others record darkness.<br><span class="grad">Sentinel records the truth.</span></h2>
+      <p class="reveal d2">The same scene at 2.5 lux — deep night, no street lighting. Three cameras. One delivers evidence. Switch between them:</p>
+    </div>
+    <div class="nv reveal d2">
+      <div class="nv-stage">
+        <img id="nvimg-0" class="show" src="Images/nv-iphone.jpg" alt="Smartphone at night">
+        <img id="nvimg-1" src="Images/nv-blacklight.jpg" alt="Standard black light camera">
+        <img id="nvimg-2" src="Images/nv-ultra.jpg" alt="Sentinel Black Light Ultra">
+        <div class="lux">2.5 LUX · NIGHT</div>
+        <div class="nv-caption">
+          <div class="who" id="nvwho">Shot on smartphone</div>
+          <div class="what" id="nvwhat">Total darkness. Zero evidence.</div>
+        </div>
+      </div>
+      <div class="nv-tabs">
+        <button class="nv-tab active" data-i="0"><div class="t"><span class="d"></span>Smartphone</div><div class="s">Total darkness. Zero evidence.</div></button>
+        <button class="nv-tab" data-i="1"><div class="t"><span class="d"></span>Standard night cam</div><div class="s">Something moved. Who? Unclear.</div></button>
+        <button class="nv-tab" data-i="2"><div class="t"><span class="d"></span>Sentinel Black Light Ultra</div><div class="s">Full color. Faces, clothing, actions — court-ready.</div></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<section class="sec" id="specs">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow reveal">The numbers</div>
+      <h2 class="reveal d1">Built for the real world.</h2>
+    </div>
+    <div class="spec-grid">
+      <div class="spec reveal d1"><div class="k">Typical AOV power</div><div class="v grad">~200 mW</div><div class="d">≈ 1/30 the draw of a traditional camera.</div></div>
+      <div class="spec reveal d2"><div class="k">Standby guarding</div><div class="v grad">Up to 90 days</div><div class="d">Engine off, still recording — on the truck's own battery.</div></div>
+      <div class="spec reveal d3"><div class="k">Night vision</div><div class="v grad">2.5 lux · full color</div><div class="d">Black Light Ultra sees where phones see black.</div></div>
+      <div class="spec reveal d1"><div class="k">Connectivity</div><div class="v grad">4G · GNSS · Wi-Fi · BT</div><div class="d">Live streaming, positioning and IoT — built in.</div></div>
+      <div class="spec reveal d2"><div class="k">Onboard</div><div class="v grad">Storage + I/O</div><div class="d">Local recording and I/O with RS-232. No separate recorder.</div></div>
+      <div class="spec reveal d3"><div class="k">Installation</div><div class="v grad">Magnetic · minutes</div><div class="d">Tool-free mount — deploy and reposition fleet-wide.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / CONTACT -->
+<section class="sec cta" id="contact">
+  <div class="wrap">
+    <div class="cta-box reveal">
+      <div class="cta-grid">
+        <div>
+          <div class="eyebrow">Ready when you are</div>
+          <h2>Stop the losses. <span class="grad">Guard every asset.</span></h2>
+          <p>See Sentinel on your own trucks. Tell us about your fleet and our team will set up a live demo and a rollout plan built for you.</p>
+          <div class="trustbar" style="justify-content:flex-start;">
+            <span><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Fleet-wide rollout</span>
+            <span><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>No recorder needed</span>
+            <span><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Live in minutes</span>
+          </div>
+        </div>
+        <div>
+          <form id="demoForm">
+            <div class="frow">
+              <input type="text" name="name" placeholder="Full name" required>
+              <input type="text" name="company" placeholder="Company" required>
+            </div>
+            <div class="frow">
+              <input type="email" name="email" placeholder="Work email" required>
+              <select name="fleet" required>
+                <option value="" disabled selected>Fleet size</option>
+                <option>1–10 vehicles</option>
+                <option>11–50 vehicles</option>
+                <option>51–200 vehicles</option>
+                <option>200+ vehicles</option>
+              </select>
+            </div>
+            <input type="text" name="region" placeholder="Region / country">
+            <button type="submit" class="btn btn-primary">Request my demo</button>
+            <div class="formnote">We'll reply within one business day. No spam, ever.</div>
+          </form>
+          <div class="thanks" id="thanks">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+            <div class="big">Thank you — request received.</div>
+            <div style="color:var(--grey);margin-top:.4rem;">Our team will reach out shortly to schedule your Sentinel demo.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOADS -->
+<section class="sec downloads" id="downloads">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow reveal">Resources</div>
+      <h2 class="reveal d1">Everything you need, <span class="grad">on paper.</span></h2>
+      <p class="reveal d2">Full documentation for evaluation, deployment and day-to-day operation. Download and share with your team.</p>
+    </div>
+    <div class="dl-grid">
+      <div class="dl-card reveal d1">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M9 3h6l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v4h4M8 13h8M8 17h6"/></svg></div>
+        <h3>Product Specification</h3>
+        <p>Complete technical specs — power, sensors, connectivity, Black Light Ultra performance and environmental ratings.</p>
+        <div class="dl-meta"><span class="pill">DOCX</span><span>0.9 MB</span></div>
+        <a class="dl-btn" href="Docs/S5-Product-Specification.docx" download="S5 Product Specification.docx">
+          <svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Download</a>
+      </div>
+      <div class="dl-card reveal d2">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M8 8h5M8 12h8M8 16h8"/></svg></div>
+        <h3>User Manual</h3>
+        <p>Step-by-step operation, platform features, alert configuration, IoT pairing and troubleshooting for fleet managers and drivers.</p>
+        <div class="dl-meta"><span class="pill">DOCX</span><span>8.8 MB</span></div>
+        <a class="dl-btn" href="Docs/S5-User-Manual.docx" download="S5 User Manual.docx">
+          <svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Download</a>
+      </div>
+      <div class="dl-card reveal d3">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z"/></svg></div>
+        <h3>Installation Guide</h3>
+        <p>Magnetic mounting positions, power hookup, quick-start setup and best practices for a fast, tool-free fleet-wide rollout.</p>
+        <div class="dl-meta"><span class="pill">DOCX</span><span>3.8 MB</span></div>
+        <a class="dl-btn" href="Docs/S5-Installation-Guide.docx" download="S5 Installation Guide.docx">
+          <svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Download</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a href="#hero" class="logo"><span class="dot"></span>SENTINEL<small>by Streamax</small></a>
+    <div class="muted">© 2026 Streamax Technology · Sentinel 24/7 AOV Camera · Trucking Asset Security</div>
+    <a href="#contact" class="btn btn-ghost">Request a demo</a>
+  </div>
+</footer>
+
+<script>
+/* scroll progress + nav solidify */
+const nav=document.getElementById('nav'), prog=document.getElementById('prog');
+function onScroll(){
+  const h=document.documentElement;
+  const p=h.scrollTop/(h.scrollHeight-h.clientHeight);
+  prog.style.width=(p*100)+'%';
+  nav.classList.toggle('solid',h.scrollTop>40);
+}
+addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+/* reveal on scroll */
+const revObs=new IntersectionObserver((es)=>{
+  es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); revObs.unobserve(e.target);} });
+},{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+/* animated counters */
+function animateCount(el){
+  const to=parseFloat(el.dataset.to), dec=parseInt(el.dataset.dec||'0'), suf=el.dataset.suffix||'';
+  const dur=1400, t0=performance.now();
+  function tick(now){
+    const p=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-p,3);
+    el.textContent=(to*e).toFixed(dec)+suf;
+    if(p<1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+const cntObs=new IntersectionObserver((es)=>{
+  es.forEach(e=>{ if(e.isIntersecting){ animateCount(e.target); cntObs.unobserve(e.target);} });
+},{threshold:.6});
+document.querySelectorAll('.count').forEach(el=>cntObs.observe(el));
+
+/* scroll-spy nav */
+const spy=[...document.querySelectorAll('.navlinks a')];
+const secs=spy.map(a=>document.querySelector(a.getAttribute('href')));
+const spyObs=new IntersectionObserver((es)=>{
+  es.forEach(e=>{ if(e.isIntersecting){
+    const id='#'+e.target.id; spy.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===id));
+  }});
+},{rootMargin:'-45% 0px -50% 0px'});
+secs.forEach(s=>{ if(s) spyObs.observe(s); });
+
+/* night-vision switcher */
+const who=document.getElementById('nvwho'), what=document.getElementById('nvwhat');
+const NV=[
+  ['Shot on smartphone','Total darkness. Zero evidence.'],
+  ['Standard black light camera','Something moved. Who? Unclear.'],
+  ['Sentinel · Black Light Ultra','Full color. Faces, clothing, actions — court-ready.']
+];
+document.querySelectorAll('.nv-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    const i=+tab.dataset.i;
+    document.querySelectorAll('.nv-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.nv-stage img').forEach((im,ix)=>im.classList.toggle('show',ix===i));
+    who.textContent=NV[i][0]; what.textContent=NV[i][1];
+  });
+});
+
+/* lazy-load the heavy 3D model only when scrolled near */
+const d3=document.getElementById('d3'), d3load=document.getElementById('d3load');
+const d3Obs=new IntersectionObserver((es)=>{
+  es.forEach(e=>{ if(e.isIntersecting && !d3.src){ d3.src=d3.dataset.src; d3.addEventListener('load',()=>{ if(d3load) d3load.style.opacity='0'; }); d3Obs.disconnect(); } });
+},{rootMargin:'200px'});
+d3Obs.observe(document.querySelector('.frame3d'));
+
+/* demo form (front-end only) */
+document.getElementById('demoForm').addEventListener('submit',(e)=>{
+  e.preventDefault();
+  document.getElementById('demoForm').style.display='none';
+  document.getElementById('thanks').classList.add('show');
+});
+</script>
+</body>
+</html>
